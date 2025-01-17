@@ -31,7 +31,7 @@ function Matches() {
 
     return (
         <div className="matches-container">
-            <h2 className="matches-heading">Upcoming Matches</h2>
+            <h2 className="matches-heading">Premier league - Season 23/24</h2>
             <div className="filters">
                 <select onChange={(e) => setLeague(e.target.value)} value={league} className="select-box">
                     <option value={39}>Premier League</option>
