@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-require('dotenv').config();
+require('dotenv').config();  // Ladda API-nyckeln från .env
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,18 +9,27 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Route: Get matches
+// Route: Fetch matches
 app.get('/matches', async (req, res) => {
-    const { league } = req.query; // Exempel: ?league=PL
-    const apiUrl = `https://api.football-data.org/v4/competitions/${league}/matches`;
+    const { league = 39 } = req.query; // Default Premier League (39)
+    const apiUrl = `https://v3.football.api-sports.io/fixtures?league=${league}&season=2023`;
+
     try {
         const response = await axios.get(apiUrl, {
-            headers: { 'X-Auth-Token': process.env.API_KEY }
+            headers: {
+                'x-rapidapi-key': process.env.API_KEY,  // Hämta nyckeln från .env-filen
+                'x-rapidapi-host': 'v3.football.api-sports.io',
+            },
         });
-        res.json(response.data);
+
+        console.log('API Response:', response.data); // Logga API-svaret
+        res.json(response.data.response); // Skicka data till frontend
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Failed to fetch match data');
+        console.error('Error fetching matches:', error.message);
+        res.status(500).send({
+            message: 'Failed to fetch match data',
+            error: error.message,
+        });
     }
 });
 

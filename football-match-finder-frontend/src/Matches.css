@@ -1,0 +1,86 @@
+/* Grundläggande design */
+.matches-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    color: #333;
+    background-color: #f4f4f9;
+}
+
+.matches-heading {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.select-box {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.loading-text {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #888;
+}
+
+.error-text {
+    color: red;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.matches-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.match-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.match-card:hover {
+    transform: scale(1.05);
+}
+
+.teams {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.team-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.team-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.score {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.match-details {
+    font-size: 0.9rem;
+    color: #555;
+}
