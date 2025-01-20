@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 
 // Route: Fetch matches
 app.get('/matches', async (req, res) => {
-    const { league = 39, team } = req.query; // Lägg till "team" som filter
+    const { league = 39, team, dateFilter } = req.query; // Lägg till dateFilter
     const apiUrl = `https://v3.football.api-sports.io/fixtures?league=${league}&season=2023`;
 
     try {
@@ -38,6 +38,28 @@ app.get('/matches', async (req, res) => {
             );
         }
 
+        // Filtrera om "dateFilter" är specificerat
+        if (dateFilter) {
+            const today = new Date();
+            matches = matches.filter(match => {
+                const matchDate = new Date(match.fixture.date);
+                if (dateFilter === 'today') {
+                    return matchDate.toDateString() === today.toDateString();
+                } else if (dateFilter === 'this-week') {
+                    const endOfWeek = new Date(today);
+                    endOfWeek.setDate(today.getDate() + 7);
+                    return matchDate >= today && matchDate <= endOfWeek;
+                } else if (dateFilter === 'next-week') {
+                    const startOfNextWeek = new Date(today);
+                    startOfNextWeek.setDate(today.getDate() + 7);
+                    const endOfNextWeek = new Date(startOfNextWeek);
+                    endOfNextWeek.setDate(startOfNextWeek.getDate() + 7);
+                    return matchDate >= startOfNextWeek && matchDate <= endOfNextWeek;
+                }
+                return true; // Om inget matchar, returnera allt
+            });
+        }
+
         res.json(matches);
     } catch (error) {
         console.error('Error fetching matches:', error.message);
@@ -47,7 +69,6 @@ app.get('/matches', async (req, res) => {
         });
     }
 });
-
 
 // Start servern
 app.listen(PORT, () => {

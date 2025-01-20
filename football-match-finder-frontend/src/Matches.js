@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+// Matches.js
+import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
 import './Matches.css'; // Vi importerar CSS-filen här
+import MatchModal from './MatchModal'; // Importera vår nya modal
 
 function Matches() {
     const [matches, setMatches] = useState([]);
@@ -8,12 +10,17 @@ function Matches() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [dateFilter, setDateFilter] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedMatch, setSelectedMatch] = useState(null); // För att hålla koll på vald match
 
     const fetchMatches = () => {
         setError('');
         setLoading(true);
+
+        const url = `http://localhost:3000/matches?league=${league}&dateFilter=${dateFilter}&team=${searchQuery}`;
+
         axios
-            .get(`http://localhost:3000/matches?league=${league}&dateFilter=${dateFilter}`)
+            .get(url)
             .then((response) => {
                 setMatches(response.data || []);
                 setLoading(false);
@@ -27,31 +34,50 @@ function Matches() {
 
     useEffect(() => {
         fetchMatches();
-    }, [league, dateFilter]);
+    }, [league, dateFilter, searchQuery]); // Uppdatera vid ändringar i sökningen
+
+    const handleMatchClick = (match) => {
+        setSelectedMatch(match);
+    };
+
+    const closeModal = () => {
+        setSelectedMatch(null);
+    };
 
     return (
         <div className="matches-container">
-            <h2 className="matches-heading">Premier league - Season 23/24</h2>
+            <h2 className="matches-heading">Premier League/Championship - Season 23/24</h2>
             <div className="filters">
                 <select onChange={(e) => setLeague(e.target.value)} value={league} className="select-box">
                     <option value={39}>Premier League</option>
                     <option value={40}>Championship</option>
                 </select>
+
                 <select onChange={(e) => setDateFilter(e.target.value)} value={dateFilter} className="select-box">
                     <option value="">All Dates</option>
                     <option value="today">Today</option>
                     <option value="this-week">This Week</option>
                     <option value="next-week">Next Week</option>
                 </select>
+
+                <input
+                    type="text"
+                    placeholder="Search by team..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-box"
+                />
             </div>
+
             {loading && <p className="loading-text">Loading...</p>}
             {error && <p className="error-text">{error}</p>}
+
             <div className="matches-list">
                 {matches.length === 0 ? (
                     <p>No matches available at the moment.</p>
                 ) : (
                     matches.map((match) => (
-                        <div key={match.fixture.id} className="match-card">
+                        <div key={match.fixture.id} className="match-card" onClick={() => handleMatchClick(match)}>
                             <div className="teams">
                                 <img src={match.teams.home.logo} alt={match.teams.home.name} className="team-logo" />
                                 <span className="team-name">{match.teams.home.name}</span>
@@ -70,6 +96,11 @@ function Matches() {
                     ))
                 )}
             </div>
+
+            {/* Visa modal om en match är vald */}
+            {selectedMatch && (
+                <MatchModal match={selectedMatch} onClose={closeModal} />
+            )}
         </div>
     );
 }
