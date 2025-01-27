@@ -1,7 +1,7 @@
 // Matches.js
 import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
-import './Matches.css'; // Vi importerar CSS-filen här
+import './Matches.css'; 
 import MatchModal from './MatchModal'; // Importera vår nya modal
 
 function Matches() {

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import './MatchModal.css'; // CSS för stilisering av modal
+import './MatchModal.css'; 
 
 const MatchModal = ({ match, onClose }) => {
     if (!match) return null; // Om ingen match är vald, visa ingenting
