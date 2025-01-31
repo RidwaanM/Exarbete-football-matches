@@ -5,6 +5,8 @@ import MatchModal from './MatchModal'; // Importera vår nya modal
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { auth, logout } from './firebase'; // Importera logout-funktionen från firebase
 
+const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+
 function Matches() {
     const [matches, setMatches] = useState([]);
     const [league, setLeague] = useState(39); // Default Premier League

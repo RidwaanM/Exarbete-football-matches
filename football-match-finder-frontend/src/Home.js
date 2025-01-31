@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, signInWithGoogle, logout } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import './Home.css'; // Importera CSS
+import './Home.css'; 
 
 function Home({ navigateTo }) {
     const [user, setUser] = useState(null);
