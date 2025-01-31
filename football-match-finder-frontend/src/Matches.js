@@ -1,8 +1,9 @@
-// Matches.js
 import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
 import './Matches.css'; 
 import MatchModal from './MatchModal'; // Importera vår nya modal
+import { FaBars, FaTimes } from 'react-icons/fa';
+import { auth, logout } from './firebase'; // Importera logout-funktionen från firebase
 
 function Matches() {
     const [matches, setMatches] = useState([]);
@@ -12,6 +13,7 @@ function Matches() {
     const [dateFilter, setDateFilter] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedMatch, setSelectedMatch] = useState(null); // För att hålla koll på vald match
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const fetchMatches = () => {
         setError('');
@@ -44,8 +46,23 @@ function Matches() {
         setSelectedMatch(null);
     };
 
+    const handleLogout = () => {
+        logout(); // Logga ut från Firebase
+        window.location.href = '/'; // Navigera till Home-sidan med hjälp av window.location
+    };
+
     return (
         <div className="matches-container">
+            <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+               
+               <br></br> <br></br>
+               <button className="home-btn" onClick={() => window.location.href = '/'}>Home</button>
+                <button className="logout-btn" onClick={handleLogout}>Logout</button> {/* Logout knapp */}
+            </div>
+            <button className={`menu-btn ${sidebarOpen ? 'open' : ''}`} onClick={() => setSidebarOpen(!sidebarOpen)}>
+                {sidebarOpen ? <FaTimes /> : <FaBars />}
+            </button>
+            
             <h2 className="matches-heading">Premier League/Championship - Season 23/24</h2>
             <div className="filters">
                 <select onChange={(e) => setLeague(e.target.value)} value={league} className="select-box">
@@ -54,10 +71,10 @@ function Matches() {
                 </select>
 
                 <select onChange={(e) => setDateFilter(e.target.value)} value={dateFilter} className="select-box">
-                    <option value="">All Dates</option>
-                    <option value="today">Today</option>
-                    <option value="this-week">This Week</option>
-                    <option value="next-week">Next Week</option>
+                    <option value="">Season 23/24</option>
+                    <option value="today">Season 22/23</option>
+                    <option value="this-week">Season 21/22</option>
+                    <option value="next-week">Season 20/21</option>
                 </select>
 
                 <input
